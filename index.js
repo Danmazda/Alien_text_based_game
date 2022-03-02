@@ -11,11 +11,15 @@ let userState = {
 const narrator = [
   {
     id: 1,
-    text: `Início`,
+    text: `You are an hibernated space marine. 
+    The federation sent you to a mission in the outer rims to retrieve a egg of an unknown species.
+     You're returning home with your crew. The journey should take 5 light years, you've awakened in 6 months...`,
     textChoice: `Voltar ao início`,
     choices: [2, 3, 4],
     setState: {
       id: 1,
+      passengers: 0,
+      timePassed: 0,
     },
   },
   {
@@ -25,6 +29,8 @@ const narrator = [
     choices: [2, 3],
     setState: {
       id: 2,
+      passengers: 1,
+      timePassed: 1,
     },
   },
   {
@@ -35,6 +41,7 @@ const narrator = [
     setState: {
       id: 3,
       timePassed: 1,
+      passengers: 0,
     },
   },
   {
@@ -44,6 +51,8 @@ const narrator = [
     choices: [1],
     setState: {
       id: 4,
+      timePassed: 2,
+      passengers: 2,
     },
   },
 ];
@@ -58,13 +67,13 @@ function startGame() {
   console.log("The game has begun.");
   console.log(userState);
   // A cena atual será a cena em que o jogador está
-  let currentState = narrator.find((time, index) => {
+  let currentScene = narrator.find((time, index) => {
     if (time.id === userState.id) {
       return true;
     }
   });
-  text.innerText = currentState.text;
-  currentState.choices.forEach((choice) => {
+  text.innerText = currentScene.text;
+  currentScene.choices.forEach((choice) => {
     // Cria um botão para cada escolha
     let newButton = document.createElement("button");
     newButton.classList.add("choice");
@@ -73,11 +82,17 @@ function startGame() {
         return true;
       }
     });
-    //> Texto do botão será o texto da escolha
+    let { id, timePassed, passengers } = nextScene.setState;
+    // Texto do botão será o texto da escolha
     newButton.innerText = nextScene.textChoice;
     //função para ir à escolha selecionada
     newButton.addEventListener("click", () => {
-      userState = { ...userState, ...nextScene.setState };
+      //Atualiza o estado, roda de novo
+      userState = {
+        id: id,
+        timePassed: userState.timePassed + timePassed,
+        passengers: userState.passengers + passengers,
+      };
       console.log(userState);
       startGame();
     });
