@@ -15,7 +15,7 @@ const narrator = [
     text: `Início`,
     textChoice: `Voltar ao início`,
     time: 0,
-    choices: [2, 3],
+    choices: [2, 3, 4],
   },
   {
     id: 2,
