@@ -1,6 +1,7 @@
 const buttons = document.getElementById("choices");
 const text = document.getElementById("text");
 
+//Criação de estado para controle do que está acontecendo no jogo.
 const userState = {
   id: 1,
   timePassed: 0,
@@ -39,19 +40,26 @@ const narrator = [
   },
 ];
 
-/////
+///// Jogo em si
 function startGame() {
   console.log("The game has begun.");
-  //while (userState.timePassed <= 6 || userState.health > 0) {
+  // A cena atual será a cena em que o jogador está
   let currentState = narrator.find((time, index) => {
     if (time.id === userState.id) {
       return true;
     }
   });
   text.innerText = currentState.text;
-  currentState.choices.forEach((c) => {
+  currentState.choices.forEach((choice) => {
+    // Cria um botão para cada escolha
     let newButton = document.createElement("div");
     newButton.classList.add("choice");
+    //> Texto do botão será o texto da escolha
+    newButton.innerText = narrator.find((value, index) => {
+      if (value.id === choice) {
+        return true;
+      }
+    }).textChoice;
     buttons.appendChild(newButton);
   });
 }
