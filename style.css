@@ -18,12 +18,16 @@ body {
   align-items: center;
   flex-direction: column;
   border: 5px solid black;
-  padding: 5px;
-  border-radius: 2px;
-  -webkit-animation: change-color 6s ease 0s infinite normal;
-  -moz-animation: change-color 6s ease 0s infinite normal;
-  -ms-animation: change-color 6s ease 0s infinite normal;
-  animation: change-color 6s ease 0s infinite normal;
+  padding: 10px;
+  -webkit-animation: change-color 4s ease-out 0s infinite normal;
+  -moz-animation: change-color 4s ease-out 0s infinite normal;
+  -ms-animation: change-color 4s ease-out 0s infinite normal;
+  animation: change-color 4s ease-out 0s infinite normal;
+}
+#title {
+  border: 2px solid #1c9b05;
+  padding: 10px;
+  margin: 10px;
 }
 #choices {
   display: grid;
@@ -32,6 +36,10 @@ body {
     "3 4";
   width: 100%;
 }
+#text {
+  margin-bottom: 10px;
+}
+
 .choice {
   font-family: inherit;
   text-align: center;
@@ -47,42 +55,40 @@ body {
   cursor: pointer;
 }
 
+/*media query*/
+@media screen and (max-width: 800px) {
+  #container {
+    width: 100%;
+  }
+}
 /* animação */
 
 @-webkit-keyframes change-color {
-  25% {
-    border-top: 5px solid#000000;
-    border-left: 5px solid#091d7c;
+  0% {
+    border-top-color: #091d7c;
   }
-  50% {
-    border-left: 5px solid#000000;
-    border-bottom: 5px solid#091d7c;
+  33% {
+    border-left-color: #091d7c;
   }
-  75% {
-    border-bottom: 5px solid#000000;
-    border-right: 5px solid#091d7c;
+  66% {
+    border-bottom-color: #091d7c;
   }
   100% {
-    border-right: 5px solid#000000;
-    border-top: 5px solid#091d7c;
+    border-right-color: #091d7c;
   }
 }
 
 @keyframes change-color {
-  25% {
-    border-top: 5px solid#000000;
-    border-left: 5px solid#091d7c;
+  0% {
+    border-top-color: #091d7c;
   }
-  50% {
-    border-left: 5px solid#000000;
-    border-bottom: 5px solid#091d7c;
+  33% {
+    border-left-color: #091d7c;
   }
-  75% {
-    border-bottom: 5px solid#000000;
-    border-right: 5px solid#091d7c;
+  66% {
+    border-bottom-color: #091d7c;
   }
   100% {
-    border-right: 5px solid#000000;
-    border-top: 5px solid#091d7c;
+    border-right-color: #091d7c;
   }
 }
