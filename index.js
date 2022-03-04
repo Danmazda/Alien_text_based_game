@@ -1,6 +1,8 @@
 const buttons = document.getElementById("choices");
 const text = document.getElementById("text");
 const title = document.getElementById("title");
+const start = document.getElementsByClassName("start")[0];
+const footer = document.querySelector("footer");
 //Criação de estado para controle do que está acontecendo no jogo.
 let userState = {
   id: 1,
@@ -14,7 +16,7 @@ const narrator = [
     id: 1,
     title: `Hibernation room`,
     text: `You are a space marine from the Delta recon team. 
-    The federation sent you to a mission in the outer rims to retrieve an egg of an unknown species.
+    The federation sent you on a mission: Secure the egg of an unknown species and take it to a secure location in the outer rims.
     The journey should take 5 light years, to spare resources you and your crew were hibernated until you reach destination.
     You've been suddenly awakened, your pod opens up and you can barely catch a breath, the hibernation room is filled with darkness with the only source of light being the blue dim light of your pod.
     As far as you can see the other pods nearby are empty, there is a putrid smell in the air. Rotten food and sewer combined.
@@ -33,9 +35,10 @@ const narrator = [
     id: 2,
     title: `Hibernation room - 2`,
     text: `You venture through the darkness, with the thudding sound as your guide, the wicked smell is getting worse, but you keep going.
-    There's an unopened pod with no lights. A fellow crewmate is trapped inside of it, knocking the door to try to release himself. You press the button to open it.`,
+    There's an unopened pod with no lights. A fellow crewmate is trapped inside of it, knocking the door to try to release himself. You help him open it.
+    He asks what the hell happened, but you also have no idea. You two agree on searching for supplies.`,
     textChoice: `Follow the noise and investigate.`,
-    choices: [3],
+    choices: [1],
     setState: {
       id: 2,
       passengers: 1,
@@ -46,7 +49,7 @@ const narrator = [
     id: 3,
     title: `Cafeteria`,
     text: `You ignore the sound and go straight to the corridor, the smell of rotten food gets worse. You are presented with a partially opened door,
-    you squeeze your body through the aperture. You're in the cafeteria`,
+    you squeeze your body through the aperture. You're in the cafeteria, some lights are still on giving a slight hope to you. There may be some supplies in the pantry,  `,
     textChoice: `Follow the corridor`,
     // Fazer nova escolha depois
     choices: [1],
@@ -68,6 +71,19 @@ const narrator = [
       passengers: 0,
     },
   },
+  {
+    id: 10,
+    title: `No escape`,
+    text: `A black thorned creature appear in front of you, with no weapon, you're just an easy prey. It opens its mouth and with one bite take your head off.
+    The last passenger will arrive to it's destination.`,
+    textChoice: ``,
+    choices: [],
+    setState: {
+      id: 10,
+      timePassed: 0,
+      passengers: 0,
+    },
+  },
 ];
 
 ///// Jogo em si
@@ -79,11 +95,16 @@ function startGame() {
   //
   console.log(userState);
   // A cena atual será a cena em que o jogador está
-  let currentScene = narrator.find((time, index) => {
-    if (time.id === userState.id) {
-      return true;
-    }
-  });
+  let currentScene;
+  if (userState.timePassed >= 6) {
+    currentScene = narrator[narrator.length - 1];
+  } else {
+    currentScene = narrator.find((time, index) => {
+      if (time.id === userState.id) {
+        return true;
+      }
+    });
+  }
   // Se  o usuário já viu a cena, não mostra o texto novamente
   if (userState.viewedScenes.includes(currentScene.id)) {
     text.innerText = "";
@@ -120,4 +141,9 @@ function startGame() {
   });
 }
 
-startGame();
+//Inicalizador
+start.addEventListener("click", () => {
+  startGame();
+  start.remove();
+  footer.remove();
+});
