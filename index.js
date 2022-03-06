@@ -11,69 +11,6 @@ let userState = {
   viewedScenes: [],
 };
 
-// Refatorar código para funcionar com a narrator function.
-const narrator = [
-  {
-    id: 1,
-    title: `Hibernation room`,
-    text: `You are a space marine from the Delta recon team. 
-    The federation sent you on a mission: Secure the egg of an unknown species and take it to a secure location in the outer rims.
-    The journey should take 5 light years, to spare resources you and your crew were hibernated until you reach destination.
-    You've been suddenly awakened, your pod opens up and you can barely catch a breath, the hibernation room is filled with darkness with the only source of light being the blue dim light of your pod.
-    As far as you can see the other pods nearby are empty, there is a putrid smell in the air. Rotten food and sewer combined.
-    There's a thudding sound coming from the end of the room. To your right you remember a corridor that leads to the cafeteria.
-    To your left is a massive door that leads to the armory.
-    `,
-    textChoice: `Go back`,
-    choices: [2, 3, 4],
-    setState: {
-      id: 1,
-      passengers: 0,
-      timePassed: 0,
-    },
-  },
-  {
-    id: 2,
-    title: `Hibernation room - 2`,
-    text: `You venture through the darkness, with the thudding sound as your guide, the wicked smell is getting worse, but you keep going.
-    There's an unopened pod with no lights. A fellow crewmate is trapped inside of it, knocking the door to try to release himself. You help him open it.
-    He asks what the hell happened, but you also have no idea. You two agree on searching for supplies.`,
-    textChoice: `Follow the noise and investigate.`,
-    choices: [1],
-    setState: {
-      id: 2,
-      passengers: 1,
-      timePassed: 1,
-    },
-  },
-  ,
-  {
-    id: 4,
-    title: `Armory`,
-    text: `You try to open the door, there's no power, the hibernation has left you weak and you can't force the door open, after a while you give up.`,
-    textChoice: `Search for your weapons`,
-    choices: [1],
-    setState: {
-      id: 4,
-      timePassed: 1,
-      passengers: 0,
-    },
-  },
-  {
-    id: 10,
-    title: `No escape`,
-    text: `A black thorned creature appear in front of you, with no weapon, you're just an easy prey. It opens its mouth and with one bite take your head off.
-    The last passenger will arrive to it's destination.`,
-    textChoice: ``,
-    choices: [],
-    setState: {
-      id: 10,
-      timePassed: 0,
-      passengers: 0,
-    },
-  },
-];
-
 ///// Jogo em si
 function startGame() {
   //Quando a função é chamada os botões são deletados
@@ -85,13 +22,9 @@ function startGame() {
   // A cena atual será a cena em que o jogador está
   let currentScene;
   if (userState.timePassed >= 6) {
-    currentScene = narrator[narrator.length - 1];
+    currentScene = narration(10, userState);
   } else {
-    currentScene = narrator.find((time, index) => {
-      if (time.id === userState.id) {
-        return true;
-      }
-    });
+    currentScene = narration(userState.id, userState);
   }
   // Se  o usuário já viu a cena, não mostra o texto novamente
   if (userState.viewedScenes.includes(currentScene.id)) {
@@ -106,23 +39,19 @@ function startGame() {
     // Cria um botão para cada escolha
     let newButton = document.createElement("button");
     newButton.classList.add("choice");
-    let nextScene = narrator.find((value, index) => {
-      if (value.id === choice) {
-        return true;
-      }
-    });
-    let { id, timePassed, passengers } = nextScene.setState;
+    let nextScene = narration(choice, userState);
     // Texto do botão será o texto da escolha
     newButton.innerText = nextScene.textChoice;
     //função para ir à escolha selecionada
     newButton.addEventListener("click", () => {
       //Atualiza o estado, roda de novo
-      userState = {
-        id: id,
-        timePassed: userState.timePassed + timePassed,
-        passengers: userState.passengers + passengers,
-        viewedScenes: userState.viewedScenes,
-      };
+      userState.id = nextScene.id;
+      if (nextScene.hasOwnProperty("passengers")) {
+        userState.passengers += nextScene.passengers;
+      }
+      if (nextScene.hasOwnProperty("timePassed")) {
+        userState.timePassed += nextScene.timePassed;
+      }
       startGame();
     });
     buttons.appendChild(newButton);
@@ -142,15 +71,16 @@ function narration(id, userState) {
   switch (id) {
     case 1:
       return {
+        id: 1,
         title: `Hibernation room`,
         text: `You are a space marine from the Delta recon team. 
-      The federation sent you on a mission: Secure the egg of an unknown species and take it to a secure location in the outer rims.
-      The journey should take 5 light years, to spare resources you and your crew were hibernated until you reach destination.
-      You've been suddenly awakened, your pod opens up and you can barely catch a breath, the hibernation room is filled with darkness with the only source of light being the blue dim light of your pod.
-      As far as you can see the other pods nearby are empty, there is a putrid smell in the air. Rotten food and sewer combined.
-      There's a thudding sound coming from the end of the room. To your right you remember a corridor that leads to the cafeteria.
-      To your left is a massive door that leads to the armory.
-      `,
+        The federation sent you on a mission: Secure the egg of an unknown species and take it to a secure location in the outer rims.
+        The journey should take 5 light years, to spare resources you and your crew were hibernated until you reach destination.
+        You've been suddenly awakened, your pod opens up and you can barely catch a breath, the hibernation room is filled with darkness with the only source of light being the blue dim light of your pod.
+        As far as you can see the other pods nearby are empty, there is a putrid smell in the air. Rotten food and sewer combined.
+        There's a thudding sound coming from the end of the room. To your right you remember a corridor that leads to the cafeteria.
+        To your left is a massive door that leads to the armory.
+        `,
         textChoice: `Go back`,
         choices: [2, 3, 4],
       };
@@ -206,8 +136,32 @@ function narration(id, userState) {
         Passenger 2: "Don't get your hopes yet boys, the command room is our objetive for now."
         `;
       }
+      return scene;
+    case 10:
+      scene = {
+        id: 10,
+        title: `No escape`,
+        text: ``,
+        textChoice: ``,
+        choices: [],
+      };
+      scene.text = noEscape();
+      return scene;
     default:
       console.log("Id not found");
       break;
   }
+}
+
+//Random death scenes
+// Criar mais cenas de morte
+function noEscape() {
+  let choice = Math.floor(3 * Math.random());
+  let deathScenes = [
+    `A black thorned creature appear in front of you, with no weapon, you're just an easy prey. It opens its mouth and with one bite take your head off.
+  The last passenger will arrive to it's destination.`,
+    `b`,
+    `c`,
+  ];
+  return deathScenes[choice];
 }
