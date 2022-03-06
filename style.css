@@ -14,27 +14,31 @@ footer {
   margin: 10px;
   font-size: 0.7rem;
 }
-/* .texture {
-  position: absolute;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-} */
+
 #container {
   text-align: center;
   background-color: rgb(0, 0, 0);
-  margin: 0 auto;
+  margin: 5px auto;
   width: 50%;
-  height: 100vh;
+  height: 98vh;
   display: flex;
   align-items: center;
   flex-direction: column;
   border: 5px solid black;
   padding: 10px;
-  -webkit-animation: change-color 4s ease-out 0s infinite normal;
-  -moz-animation: change-color 4s ease-out 0s infinite normal;
-  -ms-animation: change-color 4s ease-out 0s infinite normal;
-  animation: change-color 4s ease-out 0s infinite normal;
+  border-radius: 5px;
+  -webkit-animation: box-shadow-pulse 4s linear 0s infinite normal;
+  -moz-animation: box-shadow-pulse 4s linear 0s infinite normal;
+  -ms-animation: box-shadow-pulse 4s linear 0s infinite normal;
+  animation: box-shadow-pulse 4s linear 0s infinite normal;
+  /* //Testar em tela de maior resolução */
+  image-rendering: pixelated;
+}
+/* Centralizar mais o botão start */
+.start {
+  width: 400px;
+  height: 25px;
+  font-size: 1rem;
 }
 #title {
   border: 2px solid #1c9b05;
@@ -73,36 +77,83 @@ footer {
 @media screen and (max-width: 800px) {
   #container {
     width: 100%;
+    -webkit-animation: box-shadow-pulse-minimum 4s linear 0s infinite normal;
+    -moz-animation: box-shadow-pulse-minimum 4s linear 0s infinite normal;
+    -ms-animation: box-shadow-pulse-minimum 4s linear 0s infinite normal;
+    animation: box-shadow-pulse-minimum 4s linear 0s infinite normal;
   }
 }
 /* animação */
 
-@-webkit-keyframes change-color {
+/* box-shadow-pulse */
+@-webkit-keyframes box-shadow-pulse {
   0% {
-    border-top-color: #091d7c;
+    -webkit-box-shadow: 0px 0px 50px 0px #ff0000;
+    -moz-box-shadow: 0px 0px 50px 0px #ff0000;
+    box-shadow: 0px 0px 50px 0px #ff0000;
   }
-  33% {
-    border-left-color: #091d7c;
-  }
-  66% {
-    border-bottom-color: #091d7c;
+  50% {
+    -webkit-box-shadow: 0px 0px 50px 15px #ff0000;
+    -moz-box-shadow: 0px 0px 50px 15px #ff0000;
+    box-shadow: 0px 0px 50px 15px #ff0000;
   }
   100% {
-    border-right-color: #091d7c;
+    -webkit-box-shadow: 0px 0px 50px 0px #ff0000;
+    -moz-box-shadow: 0px 0px 50px 0px #ff0000;
+    box-shadow: 0px 0px 50px 0px #ff0000;
   }
 }
 
-@keyframes change-color {
+@keyframes box-shadow-pulse {
   0% {
-    border-top-color: #091d7c;
+    -webkit-box-shadow: 0px 0px 50px 0px #ff0000;
+    -moz-box-shadow: 0px 0px 50px 0px #ff0000;
+    box-shadow: 0px 0px 50px 0px #ff0000;
   }
-  33% {
-    border-left-color: #091d7c;
-  }
-  66% {
-    border-bottom-color: #091d7c;
+  50% {
+    -webkit-box-shadow: 0px 0px 50px 15px #ff0000;
+    -moz-box-shadow: 0px 0px 50px 15px #ff0000;
+    box-shadow: 0px 0px 50px 15px #ff0000;
   }
   100% {
-    border-right-color: #091d7c;
+    -webkit-box-shadow: 0px 0px 50px 0px #ff0000;
+    -moz-box-shadow: 0px 0px 50px 0px #ff0000;
+    box-shadow: 0px 0px 50px 0px #ff0000;
+  }
+}
+
+/* box-shadow-pulse-minimum */
+@-webkit-keyframes box-shadow-pulse-minimum {
+  0% {
+    -webkit-box-shadow: 0px 50px 50px 0px #ff0000;
+    -moz-box-shadow: 0px 50px 50px 0px #ff0000;
+    box-shadow: 0px 50px 50px 0px #ff0000;
+  }
+  50% {
+    -webkit-box-shadow: 0px -50px 50px 0px #ff0000;
+    -moz-box-shadow: 0px -50px 50px 0px #ff0000;
+    box-shadow: 0px -50px 50px 0px #ff0000;
+  }
+  100% {
+    -webkit-box-shadow: 0px 50px 50px 0px #ff0000;
+    -moz-box-shadow: 0px 50px 50px 0px #ff0000;
+    box-shadow: 0px 50px 50px 0px #ff0000;
+  }
+}
+@keyframes box-shadow-pulse-minimum {
+  0% {
+    -webkit-box-shadow: 0px 50px 50px 0px #ff0000;
+    -moz-box-shadow: 0px 50px 50px 0px #ff0000;
+    box-shadow: 0px 50px 50px 0px #ff0000;
+  }
+  50% {
+    -webkit-box-shadow: 0px -50px 50px 0px #ff0000;
+    -moz-box-shadow: 0px -50px 50px 0px #ff0000;
+    box-shadow: 0px -50px 50px 0px #ff0000;
+  }
+  100% {
+    -webkit-box-shadow: 0px 50px 50px 0px #ff0000;
+    -moz-box-shadow: 0px 50px 50px 0px #ff0000;
+    box-shadow: 0px 50px 50px 0px #ff0000;
   }
 }
