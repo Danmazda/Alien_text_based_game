@@ -141,9 +141,6 @@ function narration(id, userState) {
       scene = {
         id: 10,
         title: `No escape`,
-        text: ``,
-        textChoice: ``,
-        choices: [],
       };
       scene.text = noEscape();
       return scene;
@@ -160,8 +157,8 @@ function noEscape() {
   let deathScenes = [
     `A black thorned creature appear in front of you, with no weapon, you're just an easy prey. It opens its mouth and with one bite take your head off.
   The last passenger will arrive to it's destination.`,
-    `b`,
-    `c`,
+    `The gigantic creature got to you, with it's tail it grabs your leg and lifts you up, with it's alongated arms it rips your limbs, one at a time.`,
+    `You feel something hit your chest, lookin down you see a spear shaped tail has ripped through. The tail retracts, splattering your blood. You begin to fade while the creature feasts on your flesh. `,
   ];
   return deathScenes[choice];
 }
