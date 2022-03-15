@@ -8,11 +8,12 @@ const footer = document.querySelector("footer");
 let userState = {
   id: 1,
   lurking: 0,
-  passengers: 0,
+  passenger: true,
   path: [1],
   health: 2,
   medkit: false,
   weapon: false,
+  rPass: false,
 };
 
 const uniqueScenes = [2];
@@ -27,7 +28,7 @@ function startGame() {
   // A cena atual será a cena em que o jogador está
   let currentScene;
   if (userState.lurking > 8) {
-    currentScene = narration(30, userState);
+    currentScene = narration(50, userState);
   } else {
     currentScene = narration(userState.id, userState);
   }
@@ -66,8 +67,9 @@ function buttonCreate(id, currentScene, goBack = false) {
   newButton.addEventListener("click", () => {
     //Atualizações de estado
     userState.id = nextScene.id;
-    if (nextScene.hasOwnProperty("passengers")) {
-      userState.passengers += nextScene.passengers;
+    if (nextScene.hasOwnProperty("passenger")) {
+      userState.passenger = true;
+      true;
     }
     if (nextScene.hasOwnProperty("lurking")) {
       userState.lurking += nextScene.lurking;
@@ -130,7 +132,7 @@ function narration(id, userState) {
         textChoice: `Follow the noise and investigate.`,
         choices: [],
         id: 2,
-        passengers: 1,
+        passenger: true,
         lurking: 1,
       };
     case 3:
@@ -143,9 +145,9 @@ function narration(id, userState) {
         choices: [5, 6],
         id: 3,
         lurking: 1,
-        passengers: 0,
+        passenger: true,
       };
-      if (userState.passengers > 0) {
+      if (userState.passenger) {
         scene.text = `You and your crewmate follow the corridor to the canteen, the smell of rotten food gets worse. You are presented with a partially opened door, you two squeeze
         yourselves through the aperture. You're in the canteen, some lights are still on revealing a mess of stacked tables and chairs barricading the door to the bridge. To your left there's a door that leaves to the pantry.
         Passenger 1: "So the creature was let loose..."
@@ -161,12 +163,12 @@ function narration(id, userState) {
         textChoice: `Search for your weapons`,
         choices: [],
         lurking: 1,
-        passengers: 0,
+        passenger: true,
       };
-      if (userState.passengers == 1) {
+      if (userState.passenger) {
         scene.text = `You both try to open the door, but is sealed shut, the hibernation has left you weak, and you can't force the door open, after a while you two give up.`;
       }
-      if (userState.passengers == 2) {
+      if (userState.passenger && userState.captain) {
         scene.text = `With the backup power online you can now open the door. You three pickup armors and weapons.
         Passenger 1: "Let the beast come."
         You: "Time to avenge our comrades"
@@ -196,21 +198,21 @@ function narration(id, userState) {
         lurking: 1,
       };
 
-      if (userState.passengers === 1) {
-        scene.choices = [];
-        if (userState.lurking < 100) {
-          captain =
-            "Your captain is in the desk bleeding heavily fighting to stay alive.";
-          if (userState.medkit) {
-            captain += " You can save him with your first aid kit.";
-          } else {
-            captain += " there's nothing you can do to save him.";
-          }
+      if (userState.lurking < 100) {
+        captain =
+          "Your captain is in the desk bleeding heavily fighting to stay alive.";
+        if (userState.medkit) {
+          captain += " You can save him with your first aid kit.";
+          scene.choices = [11, 12];
+        } else {
+          captain += " there's nothing you can do to save him.";
+          scene.choices = [11];
         }
-        scene.text =
-          "With all your efforts combined you clear the way to the briefing area." +
-          captain;
       }
+      scene.text =
+        "With all your efforts combined you clear the way to the briefing area." +
+        captain;
+
       return scene;
     case 7:
       scene = {
@@ -237,21 +239,110 @@ function narration(id, userState) {
         You - There's no way to stabilize it?
         Captain - Not without the engineer.
         Passenger 2 - Maybe he's still around here.
-        Captain - Or he's that pile of blood.`;
+        Captain - Or he's that pile of blood. 
+        You go though the maintenance tunnels trying to find a way out
+        There's a door with "DON'T OPEN" written on it.`;
+        scene.choices = [9, 10];
       }
+      return scene;
+    case 9:
+      scene = {
+        id: 9,
+        title: `Maintenance door`,
+        text: `Opening the trap door you feel an unbearable heat coming from below, it's impossible to go down without proper protection`,
+        textChoice: `Go down the trapdoor`,
+        choices: [],
+        lurking: 3,
+      };
+      return scene;
+    case 10:
+      scene = {
+        id: 10,
+        title: `Maintenance door`,
+        text: `Opening the trap door you feel an unbearable heat coming from below, it's impossible to go down without proper protection`,
+        textChoice: `Go down the trapdoor`,
+        choices: [],
+        lurking: 3,
+      };
+      return scene;
+
+    case 11:
+      scene = {
+        id: 11,
+        title: `Briefing area - 2`,
+        text: `You watch your captain bleed out.`,
+        textChoice: `Watch him bleed out`,
+        choices: [13],
+        lurking: 1,
+      };
+      return scene;
+    case 12:
+      scene = {
+        id: 12,
+        title: `Briefing area - 2`,
+        text: `You save your captain.`,
+        textChoice: `Save him`,
+        choices: [13],
+        lurking: 1,
+        captain: true,
+      };
+      return scene;
+    case 13:
+      scene = {
+        id: 13,
+        title: `Command room`,
+        text: `You enter the command room.`,
+        textChoice: `Go to the command room`,
+        choices: [13],
+        lurking: -1
+      };
       return scene;
     case 29:
       scene = {
         id: 29,
         title: `The end`,
-        text: ``,
         textChoice: `Embrace your fate.`,
       };
-      scene.text = ``;
+      let dynamicText1, dynamicText2, dynamicText3;
+      if (userState.captain) {
+        dynamicText1 = "You saved your captain";
+      } else {
+        dynamicText1 = "You failed to save your captain.";
+      }
+      if (userState.passenger) {
+        dynamicText2 = "You saved your crewmate.";
+      } else {
+        dynamicText2 = "You didn't save anyone.";
+      }
+      if (userState.rPass) {
+        dynamicText3 = "You saved the traitor";
+      } else {
+        dynamicText3 = "You let the traitor burn";
+      }
+      if (!userState.rPass && userState.passenger && userState.captain) {
+        scene.text = `You made all the right choices to keep yourself alive until now, choose the fate of the mission: `;
+        scene.choices = [30, 31];
+      }
       return scene;
     case 30:
       scene = {
         id: 30,
+        title: `Good soldier.`,
+        textChoice: `Stand with the Federation.`,
+      };
+
+      return scene;
+    case 31:
+      scene = {
+        id: 31,
+        title: `A disgrace to your service`,
+        textChoice: `Save your comrades`,
+      };
+
+      return scene;
+    case 50:
+      scene = {
+        id: 50,
         title: `No escape`,
       };
       scene.text = noEscape();
