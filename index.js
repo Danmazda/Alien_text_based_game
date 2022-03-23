@@ -7,13 +7,15 @@ const footer = document.querySelector("footer");
 //Criação de estado para controle do que está acontecendo no jogo.
 let userState = {
   id: 1,
+  name: "",
+  timePassed: 0,
   lurking: 0,
-  passenger: true,
+  passenger: false,
   path: [1],
-  health: 2,
   medkit: false,
   weapon: false,
   rPass: false,
+  armor: false,
 };
 
 const uniqueScenes = [2];
@@ -30,8 +32,13 @@ function startGame() {
   if (userState.lurking > 8) {
     currentScene = narration(50, userState);
   } else {
-    currentScene = narration(userState.id, userState);
+    if (userState.timePassed > 16) {
+      currentScene = narration(49, userState);
+    } else {
+      currentScene = narration(userState.id, userState);
+    }
   }
+
   // Se  o usuário já viu a cena, não mostra o texto novamente
   // Arrumar para aparecer as diferentes cenas com diferentes quantidades de passageiros
   // if (userState  path.includes(currentScene.id)) {
@@ -71,6 +78,9 @@ function buttonCreate(id, currentScene, goBack = false) {
       userState.passenger = true;
       true;
     }
+    if (nextScene.hasOwnProperty("captain")) {
+      userState.captain = true;
+    }
     if (nextScene.hasOwnProperty("lurking")) {
       userState.lurking += nextScene.lurking;
     }
@@ -80,6 +90,10 @@ function buttonCreate(id, currentScene, goBack = false) {
     if (nextScene.hasOwnProperty("weapon")) {
       userState.weapon = true;
     }
+    if (nextScene.hasOwnProperty("armor")) {
+      userState.armor = true;
+    }
+
     if (goBack) {
       userState.path.pop();
     } else {
@@ -197,21 +211,20 @@ function narration(id, userState) {
         choices: [],
         lurking: 1,
       };
-
-      if (userState.lurking < 100) {
-        captain =
-          "Your captain is in the desk bleeding heavily fighting to stay alive.";
-        if (userState.medkit) {
-          captain += " You can save him with your first aid kit.";
-          scene.choices = [11, 12];
-        } else {
-          captain += " there's nothing you can do to save him.";
-          scene.choices = [11];
-        }
+      captain =
+        "Your captain is in the desk bleeding heavily fighting to stay alive.";
+      if (userState.medkit) {
+        captain += " You can save him with your first aid kit.";
+        scene.choices = [11, 12];
+      } else {
+        captain += " there's nothing you can do to save him.";
+        scene.choices = [11];
       }
-      scene.text =
-        "With all your efforts combined you clear the way to the briefing area." +
-        captain;
+      if (userState.passenger) {
+        scene.text =
+          "With all your efforts combined you clear the way to the briefing area." +
+          captain;
+      }
 
       return scene;
     case 7:
@@ -233,7 +246,7 @@ function narration(id, userState) {
         choices: [],
         lurking: 3,
       };
-      if (userState.weapon) {
+      if (userState.armor) {
         scene.text = `The three of you go down to the Maintenance tunnels, the armor softens the heat.
         Captain - The core has gone to shit, it's only a matter of time before it explodes.
         You - There's no way to stabilize it?
@@ -270,7 +283,9 @@ function narration(id, userState) {
       scene = {
         id: 11,
         title: `Briefing area - 2`,
-        text: `You watch your captain bleed out.`,
+        text: `Captain: There's nothing you can do right? Well to hell with it. The federation set us up, they want to cover up the mess of 2386, so they want to erase the delta team, and give the people of Ura a little gift. We're nothing but the beast meal until it arrives.
+        You: We can't do nothing to stop it?
+        Captain: I've disabled the core's refrigeration, it should explode in minutes, if we're going... to die, then the beast coming with us.`,
         textChoice: `Watch him bleed out`,
         choices: [13],
         lurking: 1,
@@ -294,9 +309,30 @@ function narration(id, userState) {
         text: `You enter the command room.`,
         textChoice: `Go to the command room`,
         choices: [13],
-        lurking: -1
+        lurking: -1,
       };
+      if (userState.captain) {
+        scene.text += `with your captain, he goes to the private supplies looking for something, while you hear something growling in the vents.
+        You: We better hurry up Chief.
+        Captain: Oh I bet you miss these.
+        He shows three infantry armors.
+        Captain: This should bear the heat of the maintenance.
+        Passenger: Why go down to the maintenance when we could decouple the room and the hell out of here?
+        Captain: There's a chance the creature comes with us, in the maintenance we can shut the vents, and trap it in the exploding part. Well you saved us both so it's your choice.`;
+        scene.armor = true;
+        scene.choices = [14];
+      }
       return scene;
+    //END
+    case 14:
+      scene = {
+        id: 14,
+        title: `You saved everyone`,
+        text: `You press the button to decouple the command room from the ship. `,
+        textChoice: `Leave now`,
+        choices: [15],
+      }
+    //END
     case 29:
       scene = {
         id: 29,
@@ -329,6 +365,7 @@ function narration(id, userState) {
         id: 30,
         title: `Good soldier.`,
         textChoice: `Stand with the Federation.`,
+        text: ``,
       };
 
       return scene;
@@ -339,6 +376,13 @@ function narration(id, userState) {
         textChoice: `Save your comrades`,
       };
 
+      return scene;
+    case 49:
+      scene = {
+        id: 49,
+        title: `Time's up`,
+        text: `You rear a rumbling sound coming from inside the ship. cracks begin to spread all over the walls. An enormous blast divide the ship in half, you're exposed to the deep space drifting away through infinity. Your last sight is the command room perfectly distatched activating it's thrusters. The last Passenger survived.`,
+      };
       return scene;
     case 50:
       scene = {
